@@ -7,6 +7,7 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
+		5C217944283ECF070025E945 /* safe_queue.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5C217942283ECF070025E945 /* safe_queue.cpp */; };
 		5CEF77E22836B0C10053076F /* main.cpp in Sources */ = {isa = PBXBuildFile; fileRef = 5CEF77E12836B0C10053076F /* main.cpp */; };
 /* End PBXBuildFile section */
 
@@ -23,6 +24,8 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		5C217942283ECF070025E945 /* safe_queue.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = safe_queue.cpp; sourceTree = "<group>"; };
+		5C217943283ECF070025E945 /* safe_queue.hpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.h; path = safe_queue.hpp; sourceTree = "<group>"; };
 		5CEF77DE2836B0C10053076F /* Sem4Project */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = Sem4Project; sourceTree = BUILT_PRODUCTS_DIR; };
 		5CEF77E12836B0C10053076F /* main.cpp */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.cpp.cpp; path = main.cpp; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -58,6 +61,8 @@
 			isa = PBXGroup;
 			children = (
 				5CEF77E12836B0C10053076F /* main.cpp */,
+				5C217942283ECF070025E945 /* safe_queue.cpp */,
+				5C217943283ECF070025E945 /* safe_queue.hpp */,
 			);
 			path = Sem4Project;
 			sourceTree = "<group>";
@@ -119,6 +124,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				5C217944283ECF070025E945 /* safe_queue.cpp in Sources */,
 				5CEF77E22836B0C10053076F /* main.cpp in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;

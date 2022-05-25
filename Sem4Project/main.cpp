@@ -1,87 +1,4 @@
-#include <iostream>
-#include <thread>
-#include <mutex>
-#include <fstream>
-#include <random>
-#include <stdio.h>
-#include <string>
-#include <sstream>
-#include <queue>
-
-using namespace std;
-
-class SafeQueue{
-private:
-    queue<string> q;
-    mutable mutex m;
-    mutable mutex vector_m;
-    vector<bool> everybody_works;
-    condition_variable c;
-public:
-    SafeQueue(int thread_num) {
-        everybody_works.assign(thread_num,false);
-    }
-    
-    SafeQueue(SafeQueue const& other) {
-        lock_guard<mutex> g(other.m);
-        lock_guard<mutex> gv(other.vector_m);
-        q = other.q;
-        everybody_works = other.everybody_works;
-    }
-    
-    SafeQueue(queue<string> const& default_queue, int thread_num) {
-        q = default_queue;
-        everybody_works.assign(thread_num,false);
-    }
-
-    void push(string name) {
-        lock_guard<mutex> g(m);
-        q.push(name);
-        c.notify_one();
-    }
-    
-    int size() {
-        lock_guard<mutex> g(m);
-        return q.size();
-    }
-    
-    void set_me_working(int th, bool val) {
-        lock_guard<mutex> g(vector_m);
-        everybody_works[th] = val;
-        c.notify_one();
-    }
-    
-    bool is_everybody_working() {
-        lock_guard<mutex> g(vector_m);
-        return accumulate(everybody_works.begin(), everybody_works.end(), false); //is ANYONE working
-    }
-    
-    string just_pop() {
-        lock_guard<mutex> lk(m);
-        if(q.empty())
-            throw "No elements";
-        string a = q.front();
-        q.pop();
-        return a;
-    }
-    
-    bool wait_pop(string& a, string& b) {
-        unique_lock<mutex> lk(m);
-        c.wait(lk, [this]{ return q.size()>1 || !is_everybody_working();});
-        if(q.empty()) {
-            throw "Error pop";
-        }
-        if(q.size()==1) {
-            return false;
-        }
-        a = q.front();
-        q.pop();
-        b = q.front();
-        q.pop();
-        return true;
-    }
-};
-
+#include "safe_queue.hpp"
 
 int read_file(FILE *f, vector<int> &rbuf, int &size_of_divisions) {
     size_t sz = fread(rbuf.data(), sizeof(rbuf[0]), rbuf.size(), f);
@@ -198,8 +115,8 @@ void merge_work(SafeQueue& q, string &endname, int my_num) {
                 i = fread(&a, sizeof(int), 1, file_first);
             }
         }
-    //    int status = remove(char_array_one);
-    //    status = remove(char_array_two);
+        int status = remove(char_array_one);
+        status = remove(char_array_two);
         fclose(file_result);
         q.push(name);
         endname = name;
@@ -250,7 +167,6 @@ int main(int argc, char**argv) {
     vector<thread> threads(num_threads);
     SafeQueue q(default_queue, num_threads);
     
-    
     auto start = std::chrono::steady_clock::now();
     
     try {
@@ -274,8 +190,6 @@ int main(int argc, char**argv) {
     auto elapsed = std::chrono::duration_cast<std::chrono::milliseconds>(end - start);
     
     cout<< "Done by "<< num_threads <<" thread(s) in "<<elapsed.count()<<" millisecs."<<endl;
-    
-    cout << "OK" << endl;
     cout << "Result file: " << end_name << endl;
     return 0;
 }
